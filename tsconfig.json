@@ -5,13 +5,27 @@
     "baseUrl": "./",
     "outDir": "./dist/out-tsc",
     "forceConsistentCasingInFileNames": true,
-    "strict": true,
+    // "strict": true,
     "noImplicitOverride": true,
     "noPropertyAccessFromIndexSignature": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
     "sourceMap": true,
     "declaration": false,
+    "typeRoots": [
+      "node_modules/@types",
+      "node_modules/@typed-mxgraph"
+    ],
+    "paths": {
+      "ngx-is-electron": [
+        "dist/ngx-is-electron/ngx-is-electron",
+        "dist/ngx-is-electron"
+      ],
+      "ngx-mxgraph": [
+        "dist/ngx-mxgraph/ngx-mxgraph",
+        "dist/ngx-mxgraph"
+      ]
+    },
     "downlevelIteration": true,
     "experimentalDecorators": true,
     "moduleResolution": "node",

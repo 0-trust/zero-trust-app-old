@@ -1,0 +1,15 @@
+{
+  "name": "ngx-mxgraph",
+  "version": "0.0.1",
+  "peerDependencies": {
+    "@angular/common": "^13.2.0",
+    "@angular/core": "^13.2.0",
+    "mxgraph": "^4.2.2"
+  },
+  "dependencies": {
+    "tslib": "^2.3.0"
+  },
+  "devDependencies": {
+    "tailwindcss": "3.1.4"
+  }
+}

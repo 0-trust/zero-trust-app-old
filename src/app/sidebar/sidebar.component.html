@@ -1,0 +1,28 @@
+<div [@onSideNavChange]="sidebarState" (mouseenter)="toggleSideNav()" (mouseleave)="toggleSideNavOnLeave()"
+  class="z-0 flex h-full px-2 space-y-6 text-blue-100 bg-blue-800">
+
+
+  <nav class="relative flex flex-col w-full text-sm">
+    <div class="grow">
+      <a routerLinkActive="active-list-item" routerLink="dashboard" title="Posture"
+        class="flex mb-2 py-2.5 px-2 items-center focus:outline-none hover:bg-blue-700 focus:bg-blue-700 hover:text-white rounded transition duration-200">
+        <mat-icon class="items-start self-center icon" [@iconAnimation]="sidebarState">privacy_tip</mat-icon>
+        <div class="pl-4" [@labelAnimation]="sidebarState">Model</div>
+      </a>
+
+      <a routerLinkActive="active-list-item" routerLink="projects" title="Projects"
+        class="flex my-2 py-2.5 px-2 items-center focus:outline-none hover:bg-blue-700 focus:bg-blue-700 hover:text-white rounded transition duration-200">
+        <mat-icon class="items-start self-center icon" [@iconAnimation]="sidebarState">source</mat-icon>
+        <div class="pl-4" [@labelAnimation]="sidebarState">Projects</div>
+      </a>
+    </div>
+    <div class="fixed bottom-0 mb-4 grow">
+      <a routerLinkActive="active-list-item" routerLink="settings" title="Settings"
+        class="flex my-2 py-2.5 px-2 items-center focus:outline-none hover:bg-blue-700 focus:bg-blue-700 hover:text-white rounded transition duration-200">
+        <mat-icon class="items-start self-center justify-between icon" [@iconAnimation]="sidebarState">settings
+        </mat-icon>
+        <div class="w-full pl-4 mr-16" [@labelAnimation]="sidebarState">Settings</div>
+      </a>
+    </div>
+  </nav>
+</div>

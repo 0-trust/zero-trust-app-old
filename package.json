@@ -1,39 +1,206 @@
 {
   "name": "zero-trust-app",
-  "version": "0.0.0",
+  "version": "0.0.1",
+  "description": "Zero Trust Modelling Application",
+  "main": "app/main.js",
+  "author": {
+    "name": "Dr. Adedayo Adetoye (aka Dayo)",
+    "url": "git+https://github.com/0-trust/service-app.git"
+  },
   "scripts": {
+    "postinstall": "electron-builder install-app-deps",
     "ng": "ng",
-    "start": "ng serve",
-    "build": "ng build",
-    "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "local": "./local-build-package-zerotrust.sh && npm run start",
+    "download:zerotrust": "./download-zerotrust.sh",
+    "build:lib": "ng build ngx-is-electron && ng build ngx-mxgraph",
+    "start": "npm run build:lib && npm-run-all -p electron:serve ng:serve",
+    "ng:serve": "ng serve -c web -o",
+    "build": "npm run build:lib && npm run electron:serve-tsc && ng build --base-href ./",
+    "build:dev": "npm run build -- -c dev",
+    "build:prod": "npm run build -- -c production",
+    "web:build": "npm run build -- -c web-production",
+    "electron": "electron",
+    "electron:serve-tsc": "tsc -p tsconfig.serve.json",
+    "electron:serve": "wait-on tcp:4200 && npm run electron:serve-tsc && electron . --serve",
+    "electron:local": "npm run build:prod && electron .",
+    "electron:build": "npm run build:prod && electron-builder build --publish=never",
+    "test": "ng test --watch=false",
+    "test:watch": "ng test",
+    "e2e": "npm run build:prod && playwright test -c e2e/playwright.config.ts e2e/",
+    "e2e:show-trace": "playwright show-trace e2e/tracing/trace.zip",
+    "version": "conventional-changelog -i CHANGELOG.md -s -r 0 && git add CHANGELOG.md",
+    "lint": "ng lint"
   },
   "private": true,
   "dependencies": {
-    "@angular/animations": "~13.2.0",
-    "@angular/common": "~13.2.0",
-    "@angular/compiler": "~13.2.0",
-    "@angular/core": "~13.2.0",
-    "@angular/forms": "~13.2.0",
-    "@angular/platform-browser": "~13.2.0",
-    "@angular/platform-browser-dynamic": "~13.2.0",
-    "@angular/router": "~13.2.0",
+    "@angular/animations": "~14.0.3",
+    "@angular/cdk": "^14.0.3",
+    "@angular/common": "~14.0.3",
+    "@angular/compiler": "~14.0.3",
+    "@angular/core": "~14.0.3",
+    "@angular/forms": "~14.0.3",
+    "@angular/material": "^14.0.3",
+    "@angular/platform-browser": "~14.0.3",
+    "@angular/platform-browser-dynamic": "~14.0.3",
+    "@angular/router": "~14.0.3",
+    "@fortawesome/angular-fontawesome": "0.10.2",
+    "@fortawesome/free-regular-svg-icons": "^6.1.1",
+    "@fortawesome/free-solid-svg-icons": "^6.1.1",
+    "@hpcc-js/wasm": "^1.13.0",
+    "d3": "^7.4.5",
+    "d3-graphviz": "^4.1.1",
+    "mxgraph": "^4.2.2",
     "rxjs": "~7.5.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.11.4"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "~13.2.6",
-    "@angular/cli": "~13.2.6",
-    "@angular/compiler-cli": "~13.2.0",
+    "@angular-builders/custom-webpack": "~14.0.0",
+    "@angular-devkit/build-angular": "~14.0.3",
+    "@angular-eslint/builder": "~14.0.0",
+    "@angular-eslint/eslint-plugin": "~14.0.0",
+    "@angular-eslint/eslint-plugin-template": "~14.0.0",
+    "@angular-eslint/schematics": "~14.0.0",
+    "@angular-eslint/template-parser": "~14.0.0",
+    "@angular/cli": "~14.0.3",
+    "@angular/compiler-cli": "~14.0.3",
+    "@ngx-translate/core": "14.0.0",
+    "@ngx-translate/http-loader": "7.0.0",
+    "@playwright/test": "^1.22.2",
+    "@tailwindcss/forms": "^0.5.2",
+    "@tailwindcss/typography": "^0.5.2",
+    "@typed-mxgraph/typed-mxgraph": "^1.0.6",
+    "@types/d3-graphviz": "^2.6.7",
     "@types/jasmine": "~3.10.0",
-    "@types/node": "^12.11.1",
+    "@types/jasminewd2": "2.0.10",
+    "@types/node": "^16.11.25",
+    "@typescript-eslint/eslint-plugin": "5.12.1",
+    "@typescript-eslint/parser": "5.12.1",
+    "autoprefixer": "^10.4.2",
+    "conventional-changelog-cli": "2.1.1",
+    "electron": "^19.0.6",
+    "electron-builder": "^23.2.0",
+    "electron-reload": "1.5.0",
+    "eslint": "8.9.0",
+    "eslint-plugin-import": "2.25.4",
+    "eslint-plugin-jsdoc": "37.9.4",
+    "eslint-plugin-prefer-arrow": "1.2.3",
     "jasmine-core": "~4.0.0",
-    "karma": "~6.3.0",
+    "jasmine-spec-reporter": "7.0.0",
+    "karma": "~6.3.16",
     "karma-chrome-launcher": "~3.1.0",
     "karma-coverage": "~2.1.0",
-    "karma-jasmine": "~4.0.0",
+    "karma-coverage-istanbul-reporter": "3.0.3",
+    "karma-electron": "^7.2.0",
+    "karma-jasmine": "~4.0.1",
     "karma-jasmine-html-reporter": "~1.7.0",
-    "typescript": "~4.5.2"
+    "ng-packagr": "^14.0.2",
+    "node-polyfill-webpack-plugin": "1.1.4",
+    "npm-run-all": "4.1.5",
+    "playwright": "^1.22.2",
+    "postcss": "^8.4.8",
+    "tailwindcss": "^3.1.4",
+    "ts-node": "10.5.0",
+    "typescript": "~4.6.2",
+    "wait-on": "6.0.1",
+    "webdriver-manager": "12.1.8"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "build": {
+    "productName": "Zero Trust Modeller",
+    "appId": "com.securityauditlabs.zerotrust",
+    "directories": {
+      "output": "release/"
+    },
+    "files": [
+      "**/*",
+      "!**/dist/builder-debug.yml",
+      "!**/dist/builder-effective-config.yml",
+      "!**/dist/zero-trust*",
+      "!**/dist/mac/*",
+      "!**/dist/win/*",
+      "!**/dist/linux/*",
+      "!zerotrust-binary/*",
+      "!**/.metals",
+      "!**/.vscode",
+      "!.browserslistrc",
+      "!**/*.ts",
+      "!*.code-workspace",
+      "!LICENSE.md",
+      "!package.json",
+      "!package-lock.json",
+      "!src/",
+      "!e2e/",
+      "!hooks/",
+      "!angular.json",
+      "!_config.yml",
+      "!karma.conf.js",
+      "!tsconfig.json",
+      "!tsconfig.serve.json",
+      "!tsconfig.spec.json",
+      "!tsconfig.app.json",
+      "!tslint.json",
+      "!**/*.sh",
+      "!notes.txt",
+      "!tailwind.config.js"
+    ],
+    "win": {
+      "icon": "build/icons/zero-trustLogo.ico",
+      "target": [
+        "portable"
+      ],
+      "publish": [
+        "github"
+      ],
+      "extraResources": [
+        {
+          "from": "zerotrust-binary/windows/zt.exe",
+          "to": "zt.exe",
+          "filter": [
+            "**/*"
+          ]
+        }
+      ]
+    },
+    "mac": {
+      "icon": "build/icons/ZeroTrustLogo.icns",
+      "category": "Utilities",
+      "identity": null,
+      "target": [
+        "dmg"
+      ],
+      "publish": [
+        "github"
+      ],
+      "extraResources": [
+        {
+          "from": "zerotrust-binary/darwin/zt",
+          "to": "zt",
+          "filter": [
+            "**/*"
+          ]
+        }
+      ]
+    },
+    "linux": {
+      "icon": "build/icons/zero-trustLogo.png",
+      "target": [
+        "AppImage"
+      ],
+      "publish": [
+        "github"
+      ],
+      "extraResources": [
+        {
+          "from": "zerotrust-binary/linux/zt",
+          "to": "zt",
+          "filter": [
+            "**/*"
+          ]
+        }
+      ]
+    }
   }
 }
