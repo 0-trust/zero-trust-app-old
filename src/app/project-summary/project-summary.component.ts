@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { faEdit } from '@fortawesome/free-regular-svg-icons';
 import { Project } from '../models/workspace';
 
 @Component({
@@ -8,11 +9,17 @@ import { Project } from '../models/workspace';
 })
 export class ProjectSummaryComponent implements OnInit {
 
+  faSettings = faEdit;
+
   @Input() project: Project;
 
   constructor() { }
 
   ngOnInit(): void {
+  }
+
+  editProject() {
+
   }
 
 }

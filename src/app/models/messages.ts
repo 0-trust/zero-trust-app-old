@@ -1,11 +1,11 @@
 export interface Message {
-  type: string;
+  type?: string;
   projectID: string;
-  workspace: string;
-  openThreatModel: string;
-  graphVizModel: string;
-  hasError: boolean;
-  error: string;
+  workspace?: string;
+  threatModel?: string;
+  visualModel?: string;
+  hasError?: boolean;
+  error?: string;
 }
 
 

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgxIsElectronService } from 'ngx-is-electron';
 import { Subscription } from 'rxjs';
@@ -16,7 +16,7 @@ import { Project, ProjectDescription } from '../models/workspace';
   templateUrl: './project-edit.component.html',
   styleUrls: ['./project-edit.component.scss']
 })
-export class ProjectEditComponent implements OnInit {
+export class ProjectEditComponent implements OnInit, OnDestroy {
 
   faEdit = faEdit;
   faAdd = faPlus;
@@ -118,10 +118,14 @@ export class ProjectEditComponent implements OnInit {
   updateProject() {
     const newWs = this.projectForm.get('newWorkspaceValue').value as string;
     const ws = newWs === '' ? this.projectForm.get('workspace').value as string : newWs;
-    const projDesc: ProjectDescription = {
-      name: this.projectForm.get('projectName').value as string,
+    const projDesc: Project = {
+      name: this.projectForm.get('projectName').value,
       workspace: ws,
-      threatModel: this.project.threatModel
+      threatModel: this.project.threatModel,
+      id: this.project.id,
+      description: this.projectForm.get('description').value,
+      owner: this.projectForm.get('owner').value,
+      ownerContact: this.projectForm.get('ownerContact').value
     };
 
     // console.log(projDesc);

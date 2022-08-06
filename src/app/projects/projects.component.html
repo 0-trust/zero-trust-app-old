@@ -16,7 +16,7 @@
           </fa-icon>
         </span>
         <input placeholder="Filter Projects ..." [(ngModel)]="projNameSearch"
-          class="relative grow pl-8 mt-2 ml-2 text-sm font-light text-gray-600 placeholder-gray-400 bg-white border border-blue-400 rounded outline-none focus:outline-none" />
+          class="relative pl-8 mt-2 ml-2 text-sm font-light text-gray-600 placeholder-gray-400 bg-white border border-blue-400 rounded outline-none grow focus:outline-none" />
         <div class="flex items-center pt-2 pl-4 text-sm cursor-pointer" (click)="downloadProjectsReport()">
           <div class="inset-x-0 text-gray-500">Download Summary</div>
 
@@ -30,11 +30,11 @@
   <div class="relative mt-5 mb-5 overflow-auto">
     <div class="grid gap-6 py-4 mx-5 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
       <div class="relative w-auto overflow-hidden bg-white rounded-lg shadow sm:h-96 md:h-auto">
-        <div class="flex w-full text-lg text-center bg-blue-800">
+        <div class="flex w-full text-lg text-center bg-purple-600">
           <p class="py-4 pl-2 text-base lg:pl-6 text-blue-50">Create New Project</p>
         </div>
         <div class="z-0 flex flex-col items-center justify-center h-32 min-h-full pb-6 sm:pb-12">
-          <a [routerLink]="['/project-setup']" class="flex text-6xl text-blue-900">+</a>
+          <a [routerLink]="['/project-setup']" class="flex text-6xl text-purple-600">+</a>
           <a [routerLink]="['/project-setup']" class="flex text-blue-900">Add project</a>
         </div>
       </div>

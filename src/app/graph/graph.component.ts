@@ -1,23 +1,21 @@
 import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { mxCell, mxEventObject, mxGraphModel } from "mxgraph";
-import mx from './mxgraph-support/mxgraph';
+import { mxGraphModel, mxEventObject, mxCell } from 'mxgraph';
+import mx from '../mxgraph-support/mxgraph';
+import { ZeroTrustService } from '../services/zero-trust.service';
 
 @Component({
-  selector: 'lib-ngx-mxgraph',
-  template: `
-  <div class="flex w-max h-max min-w-full min-h-full">
-    <div #toolbar class="w-6 max-h-fit bg-blue-50"></div>
-    <div #graph class="p-2 grow"></div>
-  </div>
-  `,
-  styles: [
-  ]
+  selector: 'app-graph',
+  templateUrl: './graph.component.html',
+  styleUrls: ['./graph.component.scss']
 })
-export class NgxMxgraphComponent implements OnInit, AfterViewInit {
+export class GraphComponent implements OnInit, AfterViewInit {
 
   @ViewChild('graph') graphContainer: ElementRef;
   @ViewChild('toolbar') toolbarContainer: ElementRef;
-  constructor() { }
+  constructor(private zt: ZeroTrustService) { }
+
+  ngOnInit(): void {
+  }
 
 
   ngAfterViewInit(): void {
@@ -108,8 +106,6 @@ export class NgxMxgraphComponent implements OnInit, AfterViewInit {
     }
   }
 
-  ngOnInit(): void {
-  }
 
   xml = `<root>
   <mxCell id="5" value="xxx" vertex="1">
@@ -128,7 +124,6 @@ export class NgxMxgraphComponent implements OnInit, AfterViewInit {
    <mxGeometry relative="1" as="geometry"/>
   </mxCell>
   </root>`;
-
 
 
   createToolBar(graph) {
@@ -170,5 +165,6 @@ export class NgxMxgraphComponent implements OnInit, AfterViewInit {
     var img = toolbar.addMode(null, image, funct);
     mx.mxUtils.makeDraggable(img, graph, funct);
   }
+
 
 }

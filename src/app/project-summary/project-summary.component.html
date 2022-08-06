@@ -1,1 +1,104 @@
-<p>project-summary works!</p>
+<div class="relative flex flex-col h-full min-w-full bg-white rounded-lg shadow ">
+  <div class="flex justify-between px-2 text-lg text-center bg-blue-700">
+    <a [routerLink]="['/view-model', project.id]" class="py-4 text-base text-blue-50 min-w-max">{{project.name}}</a>
+    <fa-icon class="self-center cursor-pointer text-blue-50" (click)="editProject()" [icon]="faSettings"
+      matTooltip="Edit project configuration"></fa-icon>
+  </div>
+  <!-- Grade -->
+  <!-- <div *ngIf='project.LastScore' class="flex pl-2 bg-blue-50">
+    <p class="absolute self-center text-xl font-bold text-blue-900">Grade</p>
+    <span class="w-full"></span>
+    <div class="flex items-center w-20 h-20 min-w-0 text-6xl text-blue-900 place-content-center">
+      {{project.LastScore.Grade}}</div>
+    <span class="w-full"></span>
+  </div> -->
+  <!-- Chart -->
+  <!-- <div class="flex items-center w-full bg-white">
+    <ngx-charts-line-chart class="w-full py-2 pl-2" [scheme]="colorScheme" [legend]="legend"
+      [showXAxisLabel]="showXAxisLabel" [showYAxisLabel]="showYAxisLabel" [xAxis]="xAxis" [yAxis]="yAxis"
+      [xAxisLabel]="xAxisLabel" [yAxisLabel]="yAxisLabel" [timeline]="timeline" [autoScale]="autoScale"
+      [results]="graphData" [curve]="curve">
+    </ngx-charts-line-chart>
+  </div> -->
+  <!-- Code repositories -->
+  <!-- <div class="h-full px-2 py-2 bg-blue-50">
+    <div class="h-full">
+      <div class="text-sm font-medium text-blue-800 truncate">Code Repositories</div>
+      <div *ngIf="project.Repositories">
+        <div *ngFor="let repo of project.Repositories" class="grid grid-cols-12 px-2 mt-1 text-xs font-semibold">
+          <span class="col-span-1 text-gray-700 uppercase">{{displayType(repo.LocationType)}}</span>
+          <div class="col-span-10 text-xs font-light text-blue-900">{{repo.Location}}</div>
+          <div *ngIf="repo.Monitor" class="col-span-1"
+            matTooltip="This repository is continuously monitored by {{appName}}">
+            <fa-icon class="text-blue-800" size="lg" [icon]="faShield">
+            </fa-icon>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div> -->
+  <!-- Issues Badges -->
+  <!-- <div class="flex justify-between px-2 py-2 cursor-pointer" (click)="loadProject()">
+
+    <div class="">
+      <span class="inline-block px-2 text-xs font-semibold tracking-wide text-gray-100 uppercase bg-blue-600">
+        Critical</span>
+      <span class="ml-2 text-xs font-semibold text-blue-800">{{criticalCount}}</span>
+    </div>
+
+
+    <div class="">
+      <span class="inline-block px-2 text-xs font-semibold tracking-wide text-gray-100 uppercase bg-red-600">
+        High</span>
+      <span class="ml-2 text-xs font-semibold text-blue-800">{{highCount}}</span>
+    </div>
+
+    <div class="">
+      <span class="inline-block px-2 text-xs font-semibold tracking-wide text-gray-100 uppercase bg-yellow-600">
+        Med</span>
+      <span class="ml-2 text-xs font-semibold text-blue-800">{{mediumCount}}</span>
+    </div>
+
+    <div class="">
+      <span class="inline-block px-2 text-xs font-semibold tracking-wide text-gray-100 uppercase bg-blue-600">
+        Low</span>
+      <span class="ml-2 text-xs font-semibold text-blue-800">{{lowCount}}</span>
+    </div>
+
+    <div class="">
+      <span class="inline-block px-2 text-xs font-semibold tracking-wide text-gray-100 uppercase bg-green-600">
+        Info</span>
+      <span class="ml-2 text-xs font-semibold text-blue-800">{{infoCount}}</span>
+    </div>
+
+  </div> -->
+  <!-- Scan progress -->
+  <!-- <div class="flex flex-col px-2 py-2 bg-gray-200">
+    <div class="flex items-center">
+      <div class="text-xs text-gray-700">Scanning</div>
+      <div class="w-full pl-1 text-xs text-blue-900">{{currentFile}}</div>
+    </div>
+    <div class="flex items-center">
+      <div class="text-xs text-gray-700">Progress</div>
+      <div class="w-full pl-2">
+        <mat-progress-bar mode="determinate" value="{{progress}}"></mat-progress-bar>
+      </div>
+    </div>
+  </div> -->
+  <!-- Scan -->
+  <!-- <div class="flex justify-between px-2 py-4 bg-blue-100">
+    <div *ngIf='project.LastScan' class="flex w-full">
+      <div class="text-sm font-bold text-blue-900 min-w-max">Last Scan:</div>
+      <div class="pl-2 text-sm text-blue-800 min-w-max">{{project.LastScan | date : "E
+        MMM dd,
+        yyyy. H:mm:ss z"
+        }}
+      </div>
+    </div>
+    <button class="focus:outline-none" (click)="runScan()">
+      <fa-icon class="text-blue-800" title="Scan" size="lg" [icon]="faPlayCircle">
+      </fa-icon>
+    </button>
+
+  </div> -->
+</div>

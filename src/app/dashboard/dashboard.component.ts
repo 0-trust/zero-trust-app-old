@@ -1,4 +1,5 @@
 import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Workspace } from '../models/workspace';
 import { ZeroTrustService } from '../services/zero-trust.service';
 
 @Component({
@@ -9,12 +10,42 @@ import { ZeroTrustService } from '../services/zero-trust.service';
 export class DashboardComponent implements OnInit, AfterViewInit {
 
 
+  noWorkspace = false;
   // graph: Graphviz<any, any, any, any>;
   @ViewChild('graph') graphContainer: ElementRef;
+  workspaces: Workspace;
+  showSpinner: boolean;
+  workspaceNames: string[];
   constructor(private zt: ZeroTrustService) { }
 
   ngOnInit(): void {
 
+    this.zt.getWorkspaceSummaries().subscribe({
+      next: (w) => {
+        console.log('Got', w);
+
+        if (w.details) {
+          this.noWorkspace = false
+          this.workspaces = w
+          this.workspaceNames = []
+          for (const k of Object.keys(w.details)) {
+            if (k === '' || k === 'Default') {
+              this.workspaceNames.push('Default');
+            } else {
+              this.workspaceNames.push(k);
+            }
+          }
+
+        } else {
+          this.noWorkspace = true
+        }
+        this.showSpinner = false
+      },
+      error: err => {
+        console.log("workspace error", err);
+        this.showSpinner = false
+      }
+    })
 
     // this.graph = graphviz('#graph')
     //   .options({

@@ -1,23 +1,20 @@
 import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { mxCell, mxEventObject, mxGraphModel } from "mxgraph";
-import mx from './mxgraph-support/mxgraph';
+import { Router } from '@angular/router';
+import { mxGraphModel, mxEventObject, mxCell } from 'mxgraph';
+import mx from '../mxgraph-support/mxgraph';
+import { ZeroTrustService } from '../services/zero-trust.service';
 
 @Component({
-  selector: 'lib-ngx-mxgraph',
-  template: `
-  <div class="flex w-max h-max min-w-full min-h-full">
-    <div #toolbar class="w-6 max-h-fit bg-blue-50"></div>
-    <div #graph class="p-2 grow"></div>
-  </div>
-  `,
-  styles: [
-  ]
+  selector: 'app-project-detail',
+  templateUrl: './project-detail.component.html',
+  styleUrls: ['./project-detail.component.scss']
 })
-export class NgxMxgraphComponent implements OnInit, AfterViewInit {
+export class ProjectDetailComponent implements OnInit, AfterViewInit {
+
 
   @ViewChild('graph') graphContainer: ElementRef;
   @ViewChild('toolbar') toolbarContainer: ElementRef;
-  constructor() { }
+  constructor(private zt: ZeroTrustService, private router: Router) { }
 
 
   ngAfterViewInit(): void {
@@ -109,6 +106,15 @@ export class NgxMxgraphComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
+
+    const path = this.router.url;
+    if (path) {
+      //get project ID from the route
+      const subPaths = path.split('/');
+      const projectID = subPaths[subPaths.length - 1];
+
+    }
+
   }
 
   xml = `<root>
@@ -128,7 +134,6 @@ export class NgxMxgraphComponent implements OnInit, AfterViewInit {
    <mxGeometry relative="1" as="geometry"/>
   </mxCell>
   </root>`;
-
 
 
   createToolBar(graph) {

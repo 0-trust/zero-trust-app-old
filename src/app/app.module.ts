@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -37,6 +37,10 @@ import { NgxMxgraphModule } from "projects/ngx-mxgraph/src/public-api";
 import { ViewModelComponent } from './view-model/view-model.component';
 import { ProjectSummaryComponent } from './project-summary/project-summary.component';
 import { ProjectFilterPipe } from './pipes/project-filter.pipe';
+import { Initialiser } from './initialiseApp';
+import { EnvironmentsService } from './services/environments.service';
+import { GraphComponent } from './graph/graph.component';
+import { ProjectDetailComponent } from './project-detail/project-detail.component';
 
 @NgModule({
   declarations: [
@@ -51,7 +55,9 @@ import { ProjectFilterPipe } from './pipes/project-filter.pipe';
     SettingsComponent,
     ProjectSetupComponent,
     ProjectSummaryComponent,
-    ProjectFilterPipe
+    ProjectFilterPipe,
+    GraphComponent,
+    ProjectDetailComponent
   ],
   imports: [
     BrowserModule,
@@ -81,7 +87,12 @@ import { ProjectFilterPipe } from './pipes/project-filter.pipe';
     NgxIsElectronModule,
     NgxMxgraphModule,
   ],
-  providers: [],
+  providers: [EnvironmentsService, {
+    provide: APP_INITIALIZER,
+    useFactory: Initialiser.initialiseApp,
+    deps: [EnvironmentsService],
+    multi: true,
+  }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

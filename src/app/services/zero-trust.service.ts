@@ -4,8 +4,8 @@ import { ElectronIPC } from './electron.service';
 import { EnvironmentsService } from './environments.service';
 import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
 import { Message } from '../models/messages';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { Project, ProjectDescription, Workspace } from '../models/workspace';
+import { BehaviorSubject, catchError, delay, EMPTY, Observable, ObservableInput, retry, retryWhen, Subject, switchAll, tap } from 'rxjs';
+import { Project, Workspace } from '../models/workspace';
 
 @Injectable({
   providedIn: 'root'
@@ -14,11 +14,16 @@ export class ZeroTrustService {
 
   private showSpinner = new BehaviorSubject<boolean>(false);
 
-  apiPort = 18273;
-  api = `http://localhost:${this.apiPort}/api`;//default, values set from environment service
-  wsAPI = `ws://localhost:${this.apiPort}/api`;//default, values set from environment service
+  private apiPort = 18273;
+  private api = `http://localhost:${this.apiPort}/api`;//default, values set from environment service
+  private wsAPI = `ws://localhost:${this.apiPort}/api`;//default, values set from environment service
+  // private socket$: WebSocketSubject<Message>;
 
-  constructor(private http: HttpClient, private electron: ElectronIPC, private env: EnvironmentsService) {
+  // private messageSubject$ = new Subject();
+  // public messages$ = this.messageSubject$.pipe(switchAll(), catchError(e => { throw e }))
+
+
+  constructor(private http: HttpClient, private electron: ElectronIPC, env: EnvironmentsService) {
     this.electron.getAPIConfig().then(port => {
       this.apiPort = port;
       this.api = `http://${env.getEnvironment().apiHost}:${port}/${env.getEnvironment().apiPath}`;
@@ -33,11 +38,85 @@ export class ZeroTrustService {
   }
 
 
-  messageSocket(message: Message): WebSocketSubject<Message> {
-    const ws = webSocket<Message>(`${this.wsAPI}/message`);
-    ws.next(message);
-    return ws;
+  getMessageWebSocketEndpoint(): string {
+    return `${this.wsAPI}/message`
   }
+
+  // connectMessageSocket(projID: string): WebSocketSubject<Message> {
+  //   const ws = webSocket<Message>({
+  //     url: `${this.wsAPI}/message`,
+  //     closeObserver: {
+  //       next: (evt) => {
+  //         console.log('[ZT socket]: connection closed', evt);
+  //         this.socket$ = undefined;
+  //         this.connect({ reconnect: true, projectID: projID })
+  //       }
+  //     },
+  //     openObserver: {
+  //       next: () => {
+  //         console.log('[ZT Socket]: new connection');
+
+  //       }
+  //     },
+  //   })
+  //   ws.subscribe({
+  //     next: msg => {
+  //       this.messageSubject$.next(msg)
+  //     }
+  //   })
+  //   // ws.next({ projectID: projID, type: 'get_model' })
+  //   return ws
+  // }
+
+  // close() {
+  //   if (this.socket$) {
+  //     this.socket$.complete()
+  //   }
+  //   this.socket$ = undefined
+  // }
+
+  // sendMessage(msg: Message) {
+  //   console.log('[ZT sending message]', msg);
+
+  //   if (this.socket$) {
+  //     this.socket$.next(msg)
+  //     console.log('message sent');
+
+
+  //   } else {
+  //     console.log('reconnecting');
+
+  //     this.connect({ reconnect: true, projectID: msg.projectID })
+  //   }
+  // }
+
+  // connect(cfg: { reconnect: boolean; projectID: string } = { reconnect: false, projectID: '' }): void {
+  //   if (!this.socket$ || this.socket$.closed) {
+  //     this.socket$ = this.connectMessageSocket(cfg.projectID)
+  //     const messages = this.socket$.pipe(cfg.reconnect ? this.reconnect : o => o,
+  //       tap({
+  //         error: err => console.log(err),
+  //       }), catchError(_ => EMPTY))
+  //     this.messageSubject$.next(messages)
+  //     // this.socket$.subscribe(x => this.messageSubject$.next(x))
+  //   }
+
+  // }
+
+
+
+  // private reconnect(observable: Observable<any>): Observable<any> {
+  //   return observable.pipe(retry({
+  //     count: 5,
+  //     delay: 3000,
+  //   }))
+  // }
+
+  // messageSocket(message: Message): WebSocketSubject<Message> {
+  //   const ws = webSocket<Message>(`${this.wsAPI}/message`);
+  //   ws.next(message);
+  //   return ws;
+  // }
 
   getWorkspaceSummaries(): Observable<Workspace> {
     return this.http.get<Workspace>(`${this.api}/workspaces`);
@@ -55,11 +134,21 @@ export class ZeroTrustService {
     return this.http.get<Project>(`${this.api}/project/${projID}`);
   }
 
-  updateProject(id: string, projDesc: ProjectDescription) {
+
+  createProject(projDesc: Project): Observable<Project> {
+    return this.http.post<Project>(`${this.api}/project/create`, projDesc);
+  }
+
+  updateProject(id: string, projDesc: Project) {
     return this.http.post<Project>(
-      `${this.api}/updateproject/${id}`,
+      `${this.api}/project/update/${id}`,
       projDesc
     );
+  }
+
+
+  deleteProject(projectID: string): Observable<string> {
+    return this.http.post<string>(`${this.api}/project/delete`, { ProjectID: projectID });
   }
 
   public setSpinnerState(v: boolean) {
