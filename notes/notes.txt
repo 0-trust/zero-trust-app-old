@@ -1,0 +1,13 @@
+Legend:
+
+* -> TODO
+- -> In progress
+x -> done
+# -> abandoned
+
+
+-------
+
+# Look at HoverIcon example here for hover-drag-connect: https://jgraph.github.io/mxgraph/javascript/examples/grapheditor/www/js/Graph.js
+* Add values to mxcell for passing attributes
+* Implement custom shapes: https://jgraph.github.io/mxgraph/javascript/examples/grapheditor/www/js/Shapes.js

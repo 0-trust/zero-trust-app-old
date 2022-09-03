@@ -1,32 +1,33 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, HostListener, OnDestroy, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { Project } from '../models/workspace';
 import { mxGraphModel, mxGraph, mxEventObject, mxCell } from 'mxgraph';
 import mx from '../mxgraph-support/mxgraph';
 import { ZeroTrustService } from '../services/zero-trust.service';
-import { Message } from '../models/messages';
 import { WebsocketManagerService } from '../services/websocket-manager.service';
-
 @Component({
   selector: 'app-view-model',
   templateUrl: './view-model.component.html',
   styleUrls: ['./view-model.component.scss'],
-  providers: [WebsocketManagerService]
+  providers: [WebsocketManagerService],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ViewModelComponent implements OnInit, OnDestroy, AfterViewInit {
 
 
   @ViewChild('graph') graphContainer: ElementRef;
   @ViewChild('toolbar') toolbarContainer: ElementRef;
+  editorInitScript = '../../assets/js/graphEditorInit.js'
   spinForProject: boolean;
   spinForProjectSummary: boolean;
+  projectID = '';
   project: Project;
   project$: Subscription;
   graph: mxGraph;
 
   constructor(private router: Router, private zt: ZeroTrustService,
-    private wsManager: WebsocketManagerService) { }
+    private wsManager: WebsocketManagerService, private renderer: Renderer2) { }
 
   ngOnInit(): void { }
 
@@ -35,17 +36,38 @@ export class ViewModelComponent implements OnInit, OnDestroy, AfterViewInit {
     const path = this.router.url;
     if (path) {
       //get project ID from the route
-      const subPaths = path.split('/');
-      const projectID = subPaths[subPaths.length - 1];
+      const subPaths = path.split('/')
+      const projectID = subPaths[subPaths.length - 1]
+      this.projectID = projectID
       this.refreshProject(projectID)
       this.wsManager.connectMessageSocket(projectID)
-      this.setupGraph()
+      this.setupGraph2()
       this.wsManager.sendMessage({
         type: 'get_model',
         projectID: projectID,
       })
     }
   }
+
+
+  setupGraph2() {
+
+    const s = this.renderer.createElement('script')
+    s.type = 'text/javascript';
+    s.src = this.editorInitScript
+    this.renderer.appendChild(this.graphContainer.nativeElement, s)
+  }
+
+  @HostListener('window:zt.graph', ['$event'])
+  instrumentGraph(event) {
+    console.log('Got event', event);
+
+    this.graph = event.detail
+    // this.createToolBar(this.graph)
+    this.addGraphEventListeners()
+    this.subscribeToGraphUpdates()
+  }
+
 
   refreshProject(projectID: string) {
     this.spinForProject = true;
@@ -90,11 +112,16 @@ export class ViewModelComponent implements OnInit, OnDestroy, AfterViewInit {
       }
     })
 
-    this.createToolBar(this.graph)
+    this.addGraphEventListeners()
+    this.subscribeToGraphUpdates()
 
+  }
+
+
+  subscribeToGraphUpdates() {
     this.wsManager.messageStream$.subscribe({
       next: msg => {
-        // console.log('inbound message', msg);
+        console.log('inbound message', msg);
         if (msg.type !== 'update_ui') {
           return
         }
@@ -123,7 +150,7 @@ export class ViewModelComponent implements OnInit, OnDestroy, AfterViewInit {
           this.graph.addCells(cells)
         } finally {
           this.graph.getModel().endUpdate();
-          this.addGraphEventListeners()
+
         }
       },
       error: err => {
@@ -165,7 +192,7 @@ export class ViewModelComponent implements OnInit, OnDestroy, AfterViewInit {
     this.graph.addListener(mx.mxEvent.CLICK, (_sender: any, evt: mxEventObject) => {
       const cell = evt.getProperty("cell") as mxCell
       if (cell != null) {
-        // console.log('clicked cell with id', cell.id);
+        console.log('clicked cell with id', cell.id);
         evt.consume()
       }
     })
@@ -181,6 +208,8 @@ export class ViewModelComponent implements OnInit, OnDestroy, AfterViewInit {
 
   createToolBar(graph) {
     const tb = this.toolbarContainer.nativeElement
+    // tb.className = "bg-blue-50"
+    this.renderer.addClass(tb, 'bg-red-100')
     const toolbar = new mx.mxToolbar(tb)
     this.addVertex(graph, toolbar, 'assets/editors/images/swimlane.gif', 120, 160, 'shape=swimlane;startSize=20;');
     this.addVertex(graph, toolbar, 'assets/editors/images/rectangle.gif', 100, 40, '');

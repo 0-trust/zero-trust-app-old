@@ -114,8 +114,7 @@ export class ProjectSetupComponent implements OnInit {
 
     this.zt.createProject(projDesc).subscribe({
       next: (proj) => {
-        console.log("Got project", proj);
-
+        this.router.navigate(['/view-model', proj.id])
       },
       error: (err) => {
         console.log(err);

@@ -1,25 +1,25 @@
-import factory, { mxGraphExportObject } from 'mxgraph';
+// import factory, { mxGraphExportObject } from 'mxgraph';
 
-declare global {
-  interface Window {
-    mxBasePath: string;
-    mxLoadResources: boolean;
-    mxForceIncludes: boolean;
-    mxLoadStylesheets: boolean;
-    mxResourceExtension: string;
-  }
-}
+// declare global {
+//   interface Window {
+//     mxBasePath: string;
+//     mxLoadResources: boolean;
+//     mxForceIncludes: boolean;
+//     mxLoadStylesheets: boolean;
+//     mxResourceExtension: string;
+//   }
+// }
 
-window.mxBasePath = '../../../assets/mxgraph';
-window.mxLoadResources = true;
-window.mxForceIncludes = true;
-window.mxLoadStylesheets = true;
-window.mxResourceExtension = '.txt';
+// window.mxBasePath = '../../../assets/mxgraph';
+// window.mxLoadResources = true;
+// window.mxForceIncludes = true;
+// window.mxLoadStylesheets = true;
+// window.mxResourceExtension = '.txt';
 
-export default factory.call(window, {
-  // not working see https://github.com/jgraph/mxgraph/issues/479
-  mxBasePath: '../../../assets/mxgraph',
-}) as mxGraphExportObject;
+// export default factory.call(window, {
+//   // not working see https://github.com/jgraph/mxgraph/issues/479
+//   mxBasePath: '../../../assets/mxgraph',
+// }) as mxGraphExportObject;
 
-// examples
-// https://jgraph.github.io/mxgraph/javascript/index.html
+// // examples
+// // https://jgraph.github.io/mxgraph/javascript/index.html

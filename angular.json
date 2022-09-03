@@ -37,9 +37,30 @@
             ],
             "styles": [
               "./node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
-              "src/styles.scss"
+              "src/styles.scss",
+              "src/assets/styles/grapheditor.css",
+              "src/assets/common.css"
             ],
-            "scripts": []
+            "scripts": [
+              "src/assets/js/mxGraphUrl.js",
+              "src/assets/js/Init.js",
+              "src/assets/deflate/pako.min.js",
+              "src/assets/deflate/base64.js",
+              "src/assets/jscolor/jscolor.js",
+              "src/assets/sanitizer/sanitizer.min.js",
+              "src/assets/dompurify/purify.min.js",
+              "src/assets/js/mxClient.js",
+              "src/assets/js/EditorUi.js",
+              "src/assets/js/Editor.js",
+              "src/assets/js/Sidebar.js",
+              "src/assets/js/Graph.js",
+              "src/assets/js/Format.js",
+              "src/assets/js/Shapes.js",
+              "src/assets/js/Actions.js",
+              "src/assets/js/Menus.js",
+              "src/assets/js/Toolbar.js",
+              "src/assets/js/Dialogs.js"
+            ]
           },
           "configurations": {
             "production": {

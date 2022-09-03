@@ -1,16 +1,16 @@
 import { NgModule } from '@angular/core';
-import { NgxMxgraphComponent } from './ngx-mxgraph.component';
+// import { NgxMxgraphComponent } from './ngx-mxgraph.component';
 
 
 
 @NgModule({
   declarations: [
-    NgxMxgraphComponent
+    // NgxMxgraphComponent
   ],
   imports: [
   ],
   exports: [
-    NgxMxgraphComponent
+    // NgxMxgraphComponent
   ]
 })
 export class NgxMxgraphModule { }

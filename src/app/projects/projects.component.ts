@@ -34,8 +34,6 @@ export class ProjectsComponent implements OnInit, OnDestroy {
 
     this.subscriptions.add(this.projects$.subscribe({
       next: x => {
-        console.log('Got projects', x);
-
         this.zt.setSpinnerState(false);
       },
       error: err => {

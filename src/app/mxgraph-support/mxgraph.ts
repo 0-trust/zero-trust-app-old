@@ -1,4 +1,4 @@
-import factory, { mxEventSource, mxGeometry, mxGraphExportObject, mxGraphModel, mxRectangle } from 'mxgraph';
+import factory, { mxGraphExportObject } from 'mxgraph';
 
 declare global {
   interface Window {
@@ -10,7 +10,7 @@ declare global {
   }
 }
 
-window.mxBasePath = '../../../assets/mxgraph';
+// window.mxBasePath = '../../../assets/mxgraph/src';
 window.mxLoadResources = true;
 window.mxForceIncludes = true;
 window.mxLoadStylesheets = true;
@@ -21,6 +21,6 @@ window.mxResourceExtension = '.txt';
 
 export default factory.call(window, {
   // not working see https://github.com/jgraph/mxgraph/issues/479
-  mxBasePath: '../../../assets/mxgraph',
+  // mxBasePath: '../../../assets/mxgraph/src',
 }) as mxGraphExportObject;
 
