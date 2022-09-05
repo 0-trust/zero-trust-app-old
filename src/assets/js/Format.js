@@ -817,12 +817,12 @@ BaseFormatPanel.prototype.createOption = function (label, isCheckedFn, setChecke
   div.style.whiteSpace = 'nowrap';
   div.style.overflow = 'hidden';
   div.style.width = '200px';
-  // div.style.height = (mxClient.IS_QUIRKS) ? '27px' : '18px';
+  // div.style.height = (mxClient.IS_QUIRKS) ? '27px' : '18px'; //Dayo
   div.style.height = '27px';
 
   var cb = document.createElement('input');
   cb.setAttribute('type', 'checkbox');
-  cb.style.margin = '0px 6px 0px 0px';
+  cb.style.margin = '0px 6px 0px 6px'; //Dayo
   div.appendChild(cb);
 
   var span = document.createElement('span');
@@ -961,11 +961,13 @@ BaseFormatPanel.prototype.createColorOption = function (label, getColorFn, setCo
   div.style.whiteSpace = 'nowrap';
   div.style.overflow = 'hidden';
   div.style.width = '200px';
-  div.style.height = (mxClient.IS_QUIRKS) ? '27px' : '18px';
+  // div.style.height = (mxClient.IS_QUIRKS) ? '27px' : '18px';//Dayo
+  div.style.height = '27px';
 
   var cb = document.createElement('input');
   cb.setAttribute('type', 'checkbox');
-  cb.style.margin = '0px 6px 0px 0px';
+  // cb.style.margin = '0px 6px 0px 0px';
+  cb.style.margin = '0px 6px 0px 6px'; //Dayo
 
   if (!hideCheckbox) {
     div.appendChild(cb);
