@@ -72,10 +72,12 @@ Sidebar.prototype.init = function () {
   var dir = STENCIL_PATH;
 
   this.addSearchPalette(true);
-  this.addGeneralPalette(true);
+  this.addCustomPalette(dir);
+
   // this.addMiscPalette(false);
   // this.addAdvancedPalette(false);
   // this.addBasicPalette(dir);
+  // this.addGeneralPalette(true);
 
   // this.setCurrentSearchEntryLibrary('arrows');
   // this.addStencilPalette('arrows', mxResources.get('arrows'), dir + '/arrows.xml',
@@ -112,7 +114,6 @@ Sidebar.prototype.collapsedImage = (!mxClient.IS_SVG) ? IMAGE_PATH + '/collapsed
 /**
  * Sets the default font size.
  */
-console.log('Image path', IMAGE_PATH);
 Sidebar.prototype.expandedImage = (!mxClient.IS_SVG) ? IMAGE_PATH + '/expanded.gif' : 'data:image/gif;base64,R0lGODlhDQANAIABAJmZmf///yH/C1hNUCBEYXRhWE1QPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4gPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iQWRvYmUgWE1QIENvcmUgNS4wLWMwNjAgNjEuMTM0Nzc3LCAyMDEwLzAyLzEyLTE3OjMyOjAwICAgICAgICAiPiA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPiA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtbG5zOnhtcE1NPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvbW0vIiB4bWxuczpzdFJlZj0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL3NUeXBlL1Jlc291cmNlUmVmIyIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ1M1IE1hY2ludG9zaCIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDoxREY3NzBERjZGNUYxMUU1QjZEOThCNDYxMDQ2MzNCQiIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDoxREY3NzBFMDZGNUYxMUU1QjZEOThCNDYxMDQ2MzNCQiI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOjFERjc3MERENkY1RjExRTVCNkQ5OEI0NjEwNDYzM0JCIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjFERjc3MERFNkY1RjExRTVCNkQ5OEI0NjEwNDYzM0JCIi8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+Af/+/fz7+vn49/b19PPy8fDv7u3s6+rp6Ofm5eTj4uHg397d3Nva2djX1tXU09LR0M/OzczLysnIx8bFxMPCwcC/vr28u7q5uLe2tbSzsrGwr66trKuqqainpqWko6KhoJ+enZybmpmYl5aVlJOSkZCPjo2Mi4qJiIeGhYSDgoGAf359fHt6eXh3dnV0c3JxcG9ubWxramloZ2ZlZGNiYWBfXl1cW1pZWFdWVVRTUlFQT05NTEtKSUhHRkVEQ0JBQD8+PTw7Ojk4NzY1NDMyMTAvLi0sKyopKCcmJSQjIiEgHx4dHBsaGRgXFhUUExIREA8ODQwLCgkIBwYFBAMCAQAAIfkEAQAAAQAsAAAAAA0ADQAAAhGMj6nL3QAjVHIu6azbvPtWAAA7';
 
 /**
@@ -1194,6 +1195,39 @@ Sidebar.prototype.addBasicPalette = function (dir) {
   ]);
   this.setCurrentSearchEntryLibrary();
 };
+
+/**
+ * Adds custom threat modelling stencil palette
+ */
+
+Sidebar.prototype.addCustomPalette = function (dir) {
+  mxUtils.get('/assets/sidebar_libs.txt', (req) => {
+    const txt = req.getText()
+    JSON.parse(txt).forEach(lib => {
+      const name = lib.replace('/assets/stencils/', '').split('.drawio')[0]
+      const id = name.toLowerCase()
+      this.setCurrentSearchEntryLibrary(id);
+      const m = ''
+      const title = name.replace(/[_-]/g, ' ')
+
+      let fns = []
+      mxUtils.get(lib, (req) => {
+        let data = req.getText()
+        let xml = mxUtils.parseXml(data)
+        xml.childNodes.forEach(child => {
+          const data = JSON.parse(child.textContent)
+          data.forEach(d => {
+            fns.push(this.addDataEntry(d.title, d.w, d.h, d.title, d.xml))
+          });
+
+        })
+      })
+      this.addPaletteFunctions(id, title, false, fns);
+      this.setCurrentSearchEntryLibrary();
+    })
+  })
+
+}
 
 /**
  * Adds the container palette to the sidebar.

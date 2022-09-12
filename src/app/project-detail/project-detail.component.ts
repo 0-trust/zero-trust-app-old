@@ -18,7 +18,6 @@ export class ProjectDetailComponent implements OnInit, AfterViewInit {
 
 
   ngAfterViewInit(): void {
-
     const graph = new mx.mxGraph(this.graphContainer.nativeElement);
     window['mxGraphModel'] = mx.mxGraphModel;
     window['mxGeometry'] = mx.mxGeometry;
@@ -48,7 +47,7 @@ export class ProjectDetailComponent implements OnInit, AfterViewInit {
     this.createToolBar(graph)
 
     graph.getModel().addListener("change", (model: mxGraphModel, evt) => {
-      console.log('got ', model, evt);
+      // console.log('got ', model, evt);
       const codec = new mx.mxCodec()
       const xml = mx.mxUtils.getXml(codec.encode(model))
       console.log(xml);

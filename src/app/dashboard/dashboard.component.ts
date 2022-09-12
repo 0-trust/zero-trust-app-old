@@ -22,8 +22,6 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 
     this.zt.getWorkspaceSummaries().subscribe({
       next: (w) => {
-        console.log('Got', w);
-
         if (w.details) {
           this.noWorkspace = false
           this.workspaces = w

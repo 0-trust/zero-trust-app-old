@@ -34,8 +34,8 @@
     var themes = new Object();
     themes[Graph.prototype.defaultThemeName] = xhr[1].getDocumentElement();
 
-    var container = document.getElementById('graph')
-    if (container) //only create UI if the intended container exists
+    var container = document.getElementById('graph') //Dayo
+    if (container) //only create UI if the intended container exists //Dayo
     {
       // Main
       new EditorUi(new Editor(urlParams['chrome'] == '0', themes), container);

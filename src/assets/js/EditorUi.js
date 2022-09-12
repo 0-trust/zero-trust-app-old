@@ -13,9 +13,7 @@ EditorUi = function (editor, container, lightbox) {
 
   var graph = this.editor.graph;
 
-  console.log('Got graph', graph);
-
-  //send graph into angular component
+  //send graph into angular component //Dayo
   var event = new CustomEvent('zt.graph', {
     bubbles: true,
     cancelable: true,
@@ -3131,7 +3129,6 @@ EditorUi.prototype.refresh = function (sizeDidChange) {
 
   var fw = (this.format != null) ? this.formatWidth : 0;
   this.sidebarContainer.style.top = tmp + 'px';
-  console.log("effHsplitPosition before style = ", effHsplitPosition);
   this.sidebarContainer.style.width = effHsplitPosition + 'px';
   this.formatContainer.style.top = tmp + 'px';
   this.formatContainer.style.width = fw + 'px';
@@ -3356,7 +3353,6 @@ EditorUi.prototype.createToolbar = function (container) {
  * Creates a new sidebar for the given container.
  */
 EditorUi.prototype.createSidebar = function (container) {
-  console.log('creating sidebar on ', container);
   return new Sidebar(this, container);
 };
 

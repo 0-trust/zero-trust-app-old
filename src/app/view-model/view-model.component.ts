@@ -16,8 +16,9 @@ import { WebsocketManagerService } from '../services/websocket-manager.service';
 export class ViewModelComponent implements OnInit, OnDestroy, AfterViewInit {
 
 
-  @ViewChild('graph') graphContainer: ElementRef;
-  @ViewChild('toolbar') toolbarContainer: ElementRef;
+  @ViewChild('graph')
+  graphContainer: ElementRef;
+  // @ViewChild('toolbar') toolbarContainer: ElementRef;
   editorInitScript = '../../assets/js/graphEditorInit.js'
   spinForProject: boolean;
   spinForProjectSummary: boolean;
@@ -30,7 +31,6 @@ export class ViewModelComponent implements OnInit, OnDestroy, AfterViewInit {
     private wsManager: WebsocketManagerService, private renderer: Renderer2) { }
 
   ngOnInit(): void { }
-
 
   ngAfterViewInit() {
     const path = this.router.url;
@@ -60,10 +60,9 @@ export class ViewModelComponent implements OnInit, OnDestroy, AfterViewInit {
 
   @HostListener('window:zt.graph', ['$event'])
   instrumentGraph(event) {
-    console.log('Got event', event);
-
     this.graph = event.detail
-    // this.createToolBar(this.graph)
+    // this.graph.setBorder(450) //arbitrary, covers screen
+
     this.addGraphEventListeners()
     this.subscribeToGraphUpdates()
   }
@@ -97,6 +96,7 @@ export class ViewModelComponent implements OnInit, OnDestroy, AfterViewInit {
     this.graph.setDropEnabled(true)
     this.graph.setConnectable(true)
     this.graph.setTooltips(true)
+    this.graph.setGridEnabled(false)
     this.graph.setBorder(450) //arbitrary, covers screen
 
     const keyHandler = new mx.mxKeyHandler(this.graph)
@@ -164,29 +164,30 @@ export class ViewModelComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   addGraphEventListeners() {
-    this.graph.getModel().addListener("change", (model: mxGraphModel, evt) => {
+
+    this.graph.getModel().addListener(mx.mxEvent.CHANGE, (model: mxGraphModel, evt) => {
       // console.log('changelistener - model, evt ', model, evt);
       const codec = new mx.mxCodec()
       const doc = codec.encode(model)
       // console.log('change-listener - doc', doc);
       const xml = mx.mxUtils.getXml(doc)
       // console.log('changelistener - Parsed xml', xml);
-      this.wsManager.sendMessage({
-        projectID: this.project.id,
-        type: 'update_model',
-        visualModel: xml
-      })
+      // this.wsManager.sendMessage({
+      //   projectID: this.project.id,
+      //   type: 'update_model',
+      //   visualModel: xml
+      // })
     })
 
-    mx.mxEvent.addMouseWheelListener((evt: WheelEvent, up: boolean) => {
-      if (evt.ctrlKey && up) {
-        this.graph.zoomIn()
-        mx.mxEvent.consume(evt)
-      } else if (evt.ctrlKey) {
-        this.graph.zoomOut()
-        mx.mxEvent.consume(evt)
-      }
-    })
+    // mx.mxEvent.addMouseWheelListener((evt: WheelEvent, up: boolean) => {
+    //   if (evt.ctrlKey && up) {
+    //     this.graph.zoomIn()
+    //     mx.mxEvent.consume(evt)
+    //   } else if (evt.ctrlKey) {
+    //     this.graph.zoomOut()
+    //     mx.mxEvent.consume(evt)
+    //   }
+    // })
 
 
     this.graph.addListener(mx.mxEvent.CLICK, (_sender: any, evt: mxEventObject) => {
@@ -206,19 +207,19 @@ export class ViewModelComponent implements OnInit, OnDestroy, AfterViewInit {
 
   }
 
-  createToolBar(graph) {
-    const tb = this.toolbarContainer.nativeElement
-    // tb.className = "bg-blue-50"
-    this.renderer.addClass(tb, 'bg-red-100')
-    const toolbar = new mx.mxToolbar(tb)
-    this.addVertex(graph, toolbar, 'assets/editors/images/swimlane.gif', 120, 160, 'shape=swimlane;startSize=20;');
-    this.addVertex(graph, toolbar, 'assets/editors/images/rectangle.gif', 100, 40, '');
-    this.addVertex(graph, toolbar, 'assets/editors/images/rounded.gif', 100, 40, 'shape=rounded;green-500');
-    this.addVertex(graph, toolbar, 'assets/editors/images/ellipse.gif', 40, 40, 'shape=ellipse');
-    this.addVertex(graph, toolbar, 'assets/editors/images/cylinder.gif', 40, 40, 'shape=cylinder');
-    this.addVertex(graph, toolbar, 'assets/editors/images/actor.gif', 30, 40, 'shape=actor');
-    toolbar.addLine();
-  }
+  // createToolBar(graph) {
+  //   // const tb = this.toolbarContainer.nativeElement
+  //   // // tb.className = "bg-blue-50"
+  //   // this.renderer.addClass(tb, 'bg-red-100')
+  //   // const toolbar = new mx.mxToolbar(tb)
+  //   // this.addVertex(graph, toolbar, 'assets/editors/images/swimlane.gif', 120, 160, 'shape=swimlane;startSize=20;');
+  //   // this.addVertex(graph, toolbar, 'assets/editors/images/rectangle.gif', 100, 40, '');
+  //   // this.addVertex(graph, toolbar, 'assets/editors/images/rounded.gif', 100, 40, 'shape=rounded;green-500');
+  //   // this.addVertex(graph, toolbar, 'assets/editors/images/ellipse.gif', 40, 40, 'shape=ellipse');
+  //   // this.addVertex(graph, toolbar, 'assets/editors/images/cylinder.gif', 40, 40, 'shape=cylinder');
+  //   // this.addVertex(graph, toolbar, 'assets/editors/images/actor.gif', 30, 40, 'shape=actor');
+  //   // toolbar.addLine();
+  // }
 
   addVertex(graph, toolbar, icon, w, h, style) {
     const vertex = new mx.mxCell(null, new mx.mxGeometry(0, 0, w, h), style);
