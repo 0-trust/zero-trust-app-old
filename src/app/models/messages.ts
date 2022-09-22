@@ -9,3 +9,8 @@ export interface Message {
 }
 
 
+export interface Model {
+  threatModel?: string;
+  visualModel?: string;
+  dirty?:boolean;
+}

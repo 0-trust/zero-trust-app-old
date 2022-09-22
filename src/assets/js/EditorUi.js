@@ -1517,6 +1517,7 @@ EditorUi.prototype.initCanvas = function () {
   var ui = this;
 
   if (this.editor.isChromelessView()) {
+
     resize = mxUtils.bind(this, function (autoscale, maxScale, cx, cy) {
       if (graph.container != null && !graph.isViewer()) {
         cx = (cx != null) ? cx : 0;
@@ -1565,6 +1566,7 @@ EditorUi.prototype.initCanvas = function () {
         }
       }
     });
+
 
     // Hack to make function available to subclassers
     this.chromelessResize = resize;
@@ -1987,6 +1989,8 @@ EditorUi.prototype.initCanvas = function () {
     }
   }
   else if (this.editor.extendCanvas) {
+
+
     /**
      * Guesses autoTranslate to avoid another repaint (see below).
      * Works if only the scale of the graph changes or if pages
@@ -1998,6 +2002,7 @@ EditorUi.prototype.initCanvas = function () {
         var pad = this.graph.getPagePadding();
         var size = this.graph.getPageSize();
 
+    
         // Updating scrollbars here causes flickering in quirks and is not needed
         // if zoom method is always used to set the current scale on the graph.
         var tx = this.translate.x;
@@ -2017,6 +2022,8 @@ EditorUi.prototype.initCanvas = function () {
           var pages = this.getPageLayout();
           var pad = this.getPagePadding();
           var size = this.getPageSize();
+      
+
 
           // Updates the minimum graph size
           var minw = Math.ceil(2 * pad.x + pages.width * size.width);

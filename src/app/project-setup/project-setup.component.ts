@@ -4,8 +4,7 @@ import { Router } from '@angular/router';
 import { faEdit, faSave, faTrashAlt } from '@fortawesome/free-regular-svg-icons';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { Subscription } from 'rxjs';
-import { json } from 'stream/consumers';
-import { Project, ProjectDescription } from '../models/workspace';
+import { Project } from '../models/workspace';
 import { ZeroTrustService } from '../services/zero-trust.service';
 
 @Component({
@@ -32,7 +31,6 @@ export class ProjectSetupComponent implements OnInit {
     owner: '',
     ownerContact: '',
     workspace: '',
-    threatModel: '',
     attributes: {},
 
   };

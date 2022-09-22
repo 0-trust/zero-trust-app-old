@@ -72,7 +72,7 @@ Sidebar.prototype.init = function () {
   var dir = STENCIL_PATH;
 
   this.addSearchPalette(true);
-  this.addCustomPalette(dir);
+  this.addCustomPalette(false);
 
   // this.addMiscPalette(false);
   // this.addAdvancedPalette(false);
@@ -1200,14 +1200,13 @@ Sidebar.prototype.addBasicPalette = function (dir) {
  * Adds custom threat modelling stencil palette
  */
 
-Sidebar.prototype.addCustomPalette = function (dir) {
+Sidebar.prototype.addCustomPalette = function (expand) {
   mxUtils.get('/assets/sidebar_libs.txt', (req) => {
     const txt = req.getText()
     JSON.parse(txt).forEach(lib => {
       const name = lib.replace('/assets/stencils/', '').split('.drawio')[0]
       const id = name.toLowerCase()
       this.setCurrentSearchEntryLibrary(id);
-      const m = ''
       const title = name.replace(/[_-]/g, ' ')
 
       let fns = []
@@ -1222,7 +1221,7 @@ Sidebar.prototype.addCustomPalette = function (dir) {
 
         })
       })
-      this.addPaletteFunctions(id, title, false, fns);
+      this.addPaletteFunctions(id, title, (expand != null) ? expand : true, fns);
       this.setCurrentSearchEntryLibrary();
     })
   })
@@ -2314,7 +2313,7 @@ Sidebar.prototype.addBpmnPalette = function (dir, expand) {
       this.createEdgeTemplateEntry('shape=link;html=1;', 100, 0, '', 'Link', null, 'bpmn link')
     ];
 
-  this.addPaletteFunctions('bpmn', 'BPMN ' + mxResources.get('general'), false, fns);
+  this.addPaletteFunctions('bpmn', 'BPMN ' + mxResources.get('general'), falsçe, fns);
   this.setCurrentSearchEntryLibrary();
 };
 

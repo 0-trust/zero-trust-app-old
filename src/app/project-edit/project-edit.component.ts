@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgxIsElectronService } from 'ngx-is-electron';
 import { Subscription } from 'rxjs';
 import { faEdit, faSave, faTrashAlt } from '@fortawesome/free-regular-svg-icons';
@@ -7,7 +7,7 @@ import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { Router } from '@angular/router';
 import { ElectronIPC } from '../services/electron.service';
 import { ZeroTrustService } from '../services/zero-trust.service';
-import { Project, ProjectDescription } from '../models/workspace';
+import { Project } from '../models/workspace';
 
 
 
@@ -121,7 +121,7 @@ export class ProjectEditComponent implements OnInit, OnDestroy {
     const projDesc: Project = {
       name: this.projectForm.get('projectName').value,
       workspace: ws,
-      threatModel: this.project.threatModel,
+      // threatModel: this.project.threatModel,
       id: this.project.id,
       description: this.projectForm.get('description').value,
       owner: this.projectForm.get('owner').value,

@@ -491,7 +491,6 @@
   CylinderShape.prototype.size = 15;
 
   CylinderShape.prototype.paintVertexShape = function (c, x, y, w, h) {
-    console.log('making cylinder shape');
     var size = Math.max(0, Math.min(h * 0.5, parseFloat(mxUtils.getValue(this.style, 'size', this.size))));
 
     c.translate(x, y);

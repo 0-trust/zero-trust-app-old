@@ -49,10 +49,10 @@ export class GraphComponent implements OnInit, AfterViewInit {
     this.createToolBar(graph)
 
     graph.getModel().addListener("change", (model: mxGraphModel, evt) => {
-      console.log('got ', model, evt);
+      // console.log('got ', model, evt);
       const codec = new mx.mxCodec()
       const xml = mx.mxUtils.getXml(codec.encode(model))
-      console.log(xml);
+      // console.log(xml);
 
       // this.zt.messageSocket({}).subscribe(x => {
       //   console.log("Message", x);

@@ -2,9 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ElectronIPC } from './electron.service';
 import { EnvironmentsService } from './environments.service';
-import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
-import { Message } from '../models/messages';
-import { BehaviorSubject, catchError, delay, EMPTY, Observable, ObservableInput, retry, retryWhen, Subject, switchAll, tap } from 'rxjs';
+import { Message, Model } from '../models/messages';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { Project, Workspace } from '../models/workspace';
 
 @Injectable({
@@ -13,6 +12,9 @@ import { Project, Workspace } from '../models/workspace';
 export class ZeroTrustService {
 
   private showSpinner = new BehaviorSubject<boolean>(false);
+
+  private currentProject$ = new BehaviorSubject<string>('');
+  private projectModels$ = new BehaviorSubject<Record<string, Model>>({});
 
   private apiPort = 18273;
   private api = `http://localhost:${this.apiPort}/api`;//default, values set from environment service
@@ -134,6 +136,10 @@ export class ZeroTrustService {
     return this.http.get<Project>(`${this.api}/project/${projID}`);
   }
 
+  getModel(projID: string): Observable<Model> {
+    return this.http.get<Model>(`${this.api}/project/model/${projID}`);
+  }
+
 
   createProject(projDesc: Project): Observable<Project> {
     return this.http.post<Project>(`${this.api}/project/create`, projDesc);
@@ -159,5 +165,26 @@ export class ZeroTrustService {
     return this.showSpinner.asObservable();
   }
 
+  get currentProjectObservable(): Observable<string> {
+    return this.currentProject$.asObservable()
+  }
+
+  set currentProject(id: string) {
+    this.currentProject$.next(id)
+  }
+
+  get projectModels(): Observable<Record<string, Model>> {
+    return this.projectModels$.asObservable()
+  }
+
+  updateprojectModel(projectID: string, model: Model) {
+    const record = this.projectModels$.getValue()
+    record[projectID] = model
+    this.projectModels$.next(record)
+  }
+
+  updateModel(msg: Message): Observable<Message> {
+    return this.http.post<Message>(`${this.api}/project/updatemodel`, msg)
+  }
 
 }

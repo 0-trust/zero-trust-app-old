@@ -216,5 +216,8 @@
       }
     }
   },
-  "defaultProject": "zero-trust-app"
+  "defaultProject": "zero-trust-app",
+  "cli": {
+    "analytics": false
+  }
 }
