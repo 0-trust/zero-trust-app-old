@@ -546,7 +546,8 @@ else {
 
 // Adds all required stylesheets and namespaces
 if (mxLoadStylesheets) {
-  mxClient.link('stylesheet', mxClient.basePath + '/css/common.css');
+  //Dayo - changed mxClient.basePath +'/css/common.css' to '/assets/common.css'
+  mxClient.link('stylesheet', '/assets/common.css');
 }
 
 /**
@@ -2012,6 +2013,28 @@ var mxUtils =
    * Defines the image used for error dialogs.
    */
   errorImage: mxClient.imageBasePath + '/error.gif',
+
+  //Dayo
+  hex2rgb: function (a) {
+    if (null != a && 7 == a.length && "#" == a.charAt(0)) {
+      var b = parseInt(a.substring(1, 3), 16), c = parseInt(a.substring(3, 5), 16);
+      a = parseInt(a.substring(5, 7), 16);
+      a = "rgb(" + b + ", " + c + ", " + a + ")"
+    }
+    return a
+  },
+
+  //Dayo
+  hex2rgba: function (a) {
+    if (null !=
+      a && 7 <= a.length && "#" == a.charAt(0)) { var b = parseInt(a.substring(1, 3), 16), c = parseInt(a.substring(3, 5), 16), d = parseInt(a.substring(5, 7), 16), e = 1; 7 < a.length && (e = parseInt(a.substring(7, 9), 16) / 255); a = "rgba(" + b + ", " + c + ", " + d + ", " + e + ")" } return a
+  },
+
+  //Dayo
+  rgba2hex: function (a) {
+    return (rgb = a && a.match ? a.match(/^rgba?[\s+]?\([\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?/i) : a) && 4 === rgb.length ? "#" + ("0" + parseInt(rgb[1], 10).toString(16)).slice(-2) + ("0" + parseInt(rgb[2], 10).toString(16)).slice(-2) + ("0" + parseInt(rgb[3], 10).toString(16)).slice(-2) :
+      a
+  },
 
   /**
    * Function: removeCursors
@@ -14589,6 +14612,7 @@ mxPopupMenu.prototype.addSeparator = function (parent, force) {
     parent.tbody.appendChild(tr);
   }
 };
+
 
 /**
  * Function: popup
@@ -36720,7 +36744,8 @@ mxGraphModel.prototype.contains = function (cell) {
  * cell - <mxCell> whose parent should be returned.
  */
 mxGraphModel.prototype.getParent = function (cell) {
-  return (cell != null) ? cell.getParent() : null;
+  //Dayo -- added condition for the definition of cell.getParent as it was failing for mxSwimlane
+  return (cell != null && cell.getParent) ? cell.getParent() : null;
 };
 
 /**
@@ -41366,7 +41391,8 @@ mxPrintPreview.prototype.writeHead = function (doc, css) {
   }
 
   // Adds all required stylesheets
-  mxClient.link('stylesheet', mxClient.basePath + '/css/common.css', doc);
+  //Dayo - changed mxClient.basePath +'/css/common.css' to '/assets/common.css'
+  mxClient.link('stylesheet', '/assets/common.css', doc);
 
   // Removes horizontal rules and page selector from print output
   doc.writeln('<style type="text/css">');

@@ -2,7 +2,7 @@ import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, E
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { Project } from '../models/workspace';
-import { mxGraphModel, mxGraph, mxEventObject, mxCell, mxShape } from 'mxgraph';
+import { mxGraphModel, mxGraph, mxEventObject, mxCell, mxShape, mxUtils } from 'mxgraph';
 import mx from '../mxgraph-support/mxgraph';
 import { ZeroTrustService } from '../services/zero-trust.service';
 import { WebsocketManagerService } from '../services/websocket-manager.service';
@@ -74,10 +74,35 @@ export class ViewModelComponent implements OnInit, OnDestroy, AfterViewInit {
   @HostListener('window:zt.graph', ['$event'])
   instrumentGraph(event) {
     this.graph = event.detail
+    this.styleGraph()
     // this.graph.setBorder(450) //arbitrary, covers screen
     this.refreshProject(this.projectID)
     this.addGraphEventListeners()
     this.subscribeToGraphUpdates()
+  }
+
+  styleGraph() {
+
+    //disable the grid
+    this.graph.setGridEnabled(false)
+    this.graph.getView().validateBackground()
+
+    // const ss = this.graph.getStylesheet()
+    // console.log('stylesheet', ss, ss.getDefaultEdgeStyle());
+
+    // const style = ss.getDefaultEdgeStyle()
+    // style[mx.mxConstants.STYLE_EDGE] = mx.mxConstants.STYLE_ORTHOGONAL
+    // style[mx.mxConstants.STYLE_ROUNDED] = true
+    // style[mx.mxConstants.STYLE_ORTHOGONAL_LOOP] = 1
+
+    mx.mxUtils.setStyle(mx.mxConstants.STYLE_EDGE, 'rounded', 1)
+
+    // ss.putDefaultEdgeStyle(style)
+    // this.graph.setStylesheet(ss)
+    // console.log('stylesheet', ss, ss.getDefaultEdgeStyle());
+
+    // const style = new Object()
+    // style[mx.mxConstants.STYLE_EDGE] = mx.mxConstants.SHAPE_ARROW
   }
 
 
@@ -91,7 +116,6 @@ export class ViewModelComponent implements OnInit, OnDestroy, AfterViewInit {
       })
     });
   }
-
 
   processVisualModel() {
     this.spin = true
@@ -150,6 +174,9 @@ export class ViewModelComponent implements OnInit, OnDestroy, AfterViewInit {
         this.graph.model.endUpdate();
         this.modelChanged = model.dirty
         this.cdr.detectChanges()
+        //disable the grid
+        this.graph.setGridEnabled(false)
+        this.graph.getView().validateBackground()
       }
     }
   }
@@ -162,37 +189,37 @@ export class ViewModelComponent implements OnInit, OnDestroy, AfterViewInit {
     this.project = proj;
   }
 
-  setupGraph() {
-    this.graph = new mx.mxGraph(this.graphContainer.nativeElement);
-    window['mxGraphModel'] = mx.mxGraphModel;
-    window['mxGeometry'] = mx.mxGeometry;
-    this.graph.setResizeContainer(true)
-    this.graph.setPanning(true)
-    this.graph.setAutoSizeCells(true)
-    this.graph.setRecursiveResize(true)
-    this.graph.setDropEnabled(true)
-    this.graph.setConnectable(true)
-    this.graph.setTooltips(true)
-    this.graph.setGridEnabled(false)
-    this.graph.setBorder(450) //arbitrary, covers screen
+  // setupGraph() {
+  //   this.graph = new mx.mxGraph(this.graphContainer.nativeElement);
+  //   window['mxGraphModel'] = mx.mxGraphModel;
+  //   window['mxGeometry'] = mx.mxGeometry;
+  //   this.graph.setResizeContainer(true)
+  //   this.graph.setPanning(true)
+  //   this.graph.setAutoSizeCells(true)
+  //   this.graph.setRecursiveResize(true)
+  //   this.graph.setDropEnabled(true)
+  //   this.graph.setConnectable(true)
+  //   this.graph.setTooltips(true)
+  //   this.graph.setGridEnabled(false)
+  //   this.graph.setBorder(450) //arbitrary, covers screen
 
-    const keyHandler = new mx.mxKeyHandler(this.graph)
-    keyHandler.bindKey(8/*BACKSPACE*/, (_evt) => {
-      const cell = this.graph.getSelectionCell()
-      if (cell) {
-        this.graph.getModel().beginUpdate();
-        try {
-          this.graph.getModel().remove(cell)
-        } finally {
-          this.graph.getModel().endUpdate()
-        }
-      }
-    })
+  //   const keyHandler = new mx.mxKeyHandler(this.graph)
+  //   keyHandler.bindKey(8/*BACKSPACE*/, (_evt) => {
+  //     const cell = this.graph.getSelectionCell()
+  //     if (cell) {
+  //       this.graph.getModel().beginUpdate();
+  //       try {
+  //         this.graph.getModel().remove(cell)
+  //       } finally {
+  //         this.graph.getModel().endUpdate()
+  //       }
+  //     }
+  //   })
 
-    this.addGraphEventListeners()
-    this.subscribeToGraphUpdates()
+  //   this.addGraphEventListeners()
+  //   this.subscribeToGraphUpdates()
 
-  }
+  // }
 
 
   subscribeToGraphUpdates() {
@@ -242,8 +269,8 @@ export class ViewModelComponent implements OnInit, OnDestroy, AfterViewInit {
 
   addGraphEventListeners() {
 
-    this.graph.getModel().addListener(mx.mxEvent.CHANGE, (model: mxGraphModel, evt) => {
-      // console.log('changelistener - model, evt ', model, evt);
+    this.graph.getModel().addListener(mx.mxEvent.CHANGE, (model: mxGraphModel, evt, x) => {
+      console.log('changelistener - model, evt ', evt, x);
       const codec = new mx.mxCodec()
       const doc = codec.encode(model)
       const xml = mx.mxUtils.getXml(doc)
@@ -257,6 +284,52 @@ export class ViewModelComponent implements OnInit, OnDestroy, AfterViewInit {
       //   type: 'update_model',
       //   visualModel: xml
       // })
+    })
+
+    this.graph.connectionHandler.addListener(mx.mxEvent.CONNECT, (sender, evt) => {
+      console.log('sender, evt', sender, evt)
+      const edge = evt.getProperty('cell') as mxCell
+      console.log('got edge', edge)
+      console.log('edge value', edge.getValue());
+
+      //  this.graph.setStylesheet()
+
+
+      this.graph.getModel().beginUpdate();
+      try {
+
+        let val = this.graph.getModel().getValue(edge)
+
+
+
+        if (!mx.mxUtils.isNode(val, 'object')) {
+          console.log('in if condition');
+
+          const doc = mx.mxUtils.createXmlDocument()
+          const obj = doc.createElement('object')
+          obj.setAttribute('label', val || '')
+          val = obj
+        }
+
+
+
+        val.setAttribute('zt.tls', 'none')
+        val.setAttribute('zt.auth', 'none')
+
+        console.log('val', val);
+
+        // Updates the value of the cell (undoable)
+        this.graph.getModel().setValue(edge, val)
+
+      } finally {
+        this.graph.getModel().endUpdate();
+
+      }
+
+      console.log('updated edge', edge)
+
+
+
     })
 
     // mx.mxEvent.addMouseWheelListener((evt: WheelEvent, up: boolean) => {
@@ -273,7 +346,8 @@ export class ViewModelComponent implements OnInit, OnDestroy, AfterViewInit {
     this.graph.addListener(mx.mxEvent.CLICK, (_sender: any, evt: mxEventObject) => {
       const cell = evt.getProperty("cell") as mxCell
       if (cell != null) {
-        // console.log('clicked cell with id', cell.id);
+        cell.getValue()
+        console.log('clicked cell with id and value', cell.id, cell.getValue(), cell.getStyle());
         evt.consume()
       }
     })

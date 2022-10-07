@@ -1,1 +1,1 @@
-["/assets/stencils/Threat-Modelling.drawio"]
+["/assets/stencils/Threat-Modelling.drawio","/assets/stencils/TrustZones.drawio"]
